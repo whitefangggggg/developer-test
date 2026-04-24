@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Task Manager</title>
+</head>
+<body>
+  <h1>Task Manager</h1>
+
+  <div>
+    <input type="text" id="newTaskTitle" placeholder="Task title" />
+    <button onclick="addTask()">Add Task</button>
+  </div>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    const API = 'http://localhost:3000';
+
+    async function loadTasks() {
+      const res = await fetch(`${API}/tasks`);
+      const data = await res.json();
+      const list = document.getElementById('taskList');
+      list.innerHTML = '';
+      data.tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.innerHTML =
+          `[${task.status}] ${task.title} ` +
+          `<button onclick="markDone(${task.id})" ${task.status === 'done' ? 'disabled' : ''}>Done</button> ` +
+          `<button onclick="deleteTask(${task.id})">Delete</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function addTask() {
+      const titleInput = document.getElementById('newTaskTitle');
+      const title = titleInput.value.trim();
+      if (!title) return;
+      await fetch(`${API}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
+      });
+      titleInput.value = '';
+      loadTasks();
+    }
+
+    async function markDone(id) {
+      await fetch(`${API}/tasks/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'done' }),
+      });
+      loadTasks();
+    }
+
+    async function deleteTask(id) {
+      await fetch(`${API}/tasks/${id}`, { method: 'DELETE' });
+      loadTasks();
+    }
+
+    loadTasks();
+  </script>
+</body>
+</html>

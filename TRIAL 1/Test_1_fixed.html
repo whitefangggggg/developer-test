@@ -39,11 +39,13 @@
       font-size: 14px;
     }
 
+    /* BUG FIX: Hero content was hidden behind the fixed navbar due to padding: 80px 20px with no top offset.
+       position:fixed removes the navbar from normal flow, so content starts at y=0 and slides underneath it. */
     .hero {
       background: linear-gradient(135deg, #1a1a2e, #16213e);
       color: white;
       text-align: center;
-      padding: 80px 20px;
+      padding: 136px 20px 80px;
       margin-top: 0;
     }
 
@@ -59,9 +61,11 @@
       margin: 0 auto 32px;
     }
 
+    /* BUG FIX: Button text color was #f4f6f9, identical to the page background, making it unreadable.
+       The color value matched body background instead of white, so text would vanish if the button background failed. */
     .btn-primary {
       background: #e94560;
-      color: #f4f6f9;
+      color: #ffffff;
       padding: 14px 32px;
       border: none;
       border-radius: 6px;
@@ -81,26 +85,34 @@
       text-align: center;
     }
 
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    .card {
+    .projects-card {
       background: white;
       border-radius: 10px;
       padding: 28px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
 
-    .card h3 {
+    .project-item {
+      padding: 20px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .project-item:first-child {
+      padding-top: 0;
+    }
+
+    .project-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .project-item h3 {
       font-size: 18px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       color: #1a1a2e;
     }
 
-    .card p {
+    .project-item p {
       font-size: 14px;
       color: #666;
       line-height: 1.6;
@@ -127,8 +139,9 @@
     }
 
     .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 32px;
       max-width: 900px;
       margin: 0 auto;
@@ -169,23 +182,26 @@
   <div class="hero">
     <h1>Build Smarter. Ship Faster.</h1>
     <p>Launchmen helps remote teams manage projects, track progress, and deliver results — powered by AI.</p>
-    <button class="btn-primary" onclick="handleCTA()">Get Started Free</button>
+
+    <!-- BUG FIX: Button called handleCTA() which only showed an alert instead of navigating to #sign-up.
+         onclick ran alert() with no navigation, so the #sign-up link was never reached. -->
+    <button class="btn-primary" onclick="window.location.href='#sign-up'">Get Started Free</button>
   </div>
 
   <div class="section">
     <h2>Current Projects</h2>
-    <div class="card-grid">
-      <div class="card">
+    <div class="projects-card">
+      <div class="project-item">
         <h3>Tasker App — Phase 2</h3>
         <p>Backend development for the task management system. Jonas is leading this sprint with Foam.</p>
         <span class="badge badge-green">In Progress</span>
       </div>
-      <div class="card">
+      <div class="project-item">
         <h3>Client Website — Silver Surge</h3>
         <p>Landing page build for Chris. Includes video embed, countdown timer, and animated sections.</p>
         <span class="badge badge-orange">Review</span>
       </div>
-      <div class="card">
+      <div class="project-item">
         <h3>AI Avatar Pipeline</h3>
         <p>Automated video generation workflow. Currently in testing with Tati managing QA.</p>
         <span class="badge badge-red">Blocked</span>
@@ -215,14 +231,19 @@
     </div>
   </div>
 
-  <script>
-    function handleCTA() {
-      alert("Welcome to Launchmen! Redirecting to signup...");
-    }
+  <div id="sign-up"></div>
 
+  <footer>
+    &copy; 2026 Launchmen. All rights reserved.
+  </footer>
+
+  <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const cards = document.querySelectorAll(".card");
-      cards.froEach(function (card) {
+
+      // BUG FIX: 'cards.froEach' caused a TypeError — hover listeners were never attached to any card.
+      // 'froEach' is a typo of 'forEach'; it does not exist on NodeList, so the entire block was skipped.
+      const cards = document.querySelectorAll(".project-item");
+      cards.forEach(function (card) {
         card.addEventListener("mouseenter", function () {
           card.style.transform = "translateY(-4px)";
           card.style.transition = "transform 0.2s ease";
@@ -234,7 +255,12 @@
 
       const statItems = document.querySelectorAll(".stat-item h3");
       statItems.forEach(function (el) {
-        const target = parseFloat(el.textContent);
+
+        // BUG FIX: The '94%' counter animated to '94' and never appended the percent sign.
+        // Number.isInteger(parseFloat('94%')) returns true, so the ternary always took the no-percent branch.
+        const rawText = el.textContent.trim();
+        const isPercent = rawText.endsWith("%");
+        const target = parseFloat(rawText);
         if (!isNaN(target)) {
           let current = 0;
           const step = target / 40;
@@ -244,18 +270,12 @@
               current = target;
               clearInterval(timer);
             }
-            el.textContent = Number.isInteger(target)
-              ? Math.round(current)
-              : current.toFixed(0) + "%";
+            el.textContent = Math.round(current) + (isPercent ? "%" : "");
           }, 30);
         }
       });
     });
   </script>
-
-  <footer>
-    &copy; 2026 Launchmen. All rights reserved.
-  </footer>
 
 </body>
 </html>

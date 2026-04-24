@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Day 1 — The Greatest Gold Bull Market of Our Lifetime | 136X Gold Miner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #000;
+      font-family: 'DM Sans', sans-serif;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: #000;
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar .brand {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: #C9A84C;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+    .navbar .days {
+      display: flex;
+      gap: 4px;
+    }
+    .navbar .day-link {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      position: relative;
+    }
+    .navbar .day-link:hover { color: #ccc; }
+    .navbar .day-link.active {
+      color: #fff;
+      border-color: #C9A84C;
+    }
+    .navbar .day-link.live { padding-right: 22px; }
+    .navbar .live-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #e53e3e;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+    }
+
+    /* ── DAY HERO ── */
+    .day-hero {
+      background: radial-gradient(ellipse at top, #0d1f3c 0%, #000 70%);
+      padding: 48px 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .day-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M 60 0 L 0 0 0 60' fill='none' stroke='rgba(201,168,76,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .day-hero > * { position: relative; z-index: 1; }
+
+    .day-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #C9A84C;
+      margin-bottom: 6px;
+    }
+    .day-date {
+      font-size: 11px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .day-hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+      max-width: 700px;
+      margin: 0 auto 32px;
+    }
+    .day-hero h1 .gold { color: #C9A84C; }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 0 auto 32px;
+      max-width: 500px;
+      border: 1px solid #222;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .stat {
+      flex: 1;
+      padding: 16px;
+      border-right: 1px solid #222;
+      text-align: center;
+    }
+    .stat:last-child { border-right: none; }
+    .stat .val {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #C9A84C;
+    }
+    .stat .lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* ── VIDEO ── */
+    .video-section {
+      background: #0a0a0a;
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
+      position: relative;
+    }
+    .video-wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+    #yt-player {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── REVEAL BOX ── */
+    .reveal-section {
+      background: #000;
+      padding: 24px 60px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .reveal-box {
+      display: none;
+      margin-top: 8px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.05));
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 4px;
+      padding: 28px 36px;
+      text-align: center;
+      opacity: 0;
+    }
+    .reveal-box.visible {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    .reveal-box h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      color: #C9A84C;
+      margin-bottom: 8px;
+    }
+    .reveal-box p {
+      font-size: 14px;
+      color: #888;
+    }
+    .reveal-box p strong { color: #C9A84C; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── ARTICLE BODY ── */
+    .day-body {
+      background: #fff;
+      color: #111;
+      padding: 60px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .by-line {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      background: #C9A84C;
+      display: inline-block;
+      padding: 4px 10px;
+      margin-bottom: 24px;
+    }
+    .day-body h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #111;
+      margin-bottom: 20px;
+    }
+    .day-body p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #444;
+      margin-bottom: 16px;
+    }
+    .section-head {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #C9A84C;
+      font-weight: 700;
+      margin: 36px 0 12px;
+    }
+    .pull-quote {
+      background: #1a1400;
+      border-left: 4px solid #C9A84C;
+      padding: 20px 24px;
+      margin: 32px 0;
+    }
+    .pull-quote .big-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: #C9A84C;
+      line-height: 1;
+    }
+    .pull-quote .pq-label {
+      color: #C9A84C;
+      font-weight: 700;
+      margin: 8px 0 4px;
+    }
+    .pull-quote .pq-desc {
+      color: #888;
+      font-size: 13px;
+      margin: 0;
+    }
+    .sign-off {
+      color: #888;
+      font-size: 14px;
+    }
+
+    /* ── PREV / NEXT NAV ── */
+    .day-nav {
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      border-top: 1px solid #1a1a1a;
+    }
+    .day-nav a {
+      color: #888;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .day-nav a:hover { color: #ccc; }
+    .day-nav a span { color: #C9A84C; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 12px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .navbar .days {
+        gap: 2px;
+        flex-wrap: wrap;
+      }
+      .navbar .day-link {
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+
+      .day-hero {
+        padding: 36px 24px 28px;
+      }
+      .day-hero h1 {
+        font-size: 28px;
+      }
+
+      .stats-row {
+        flex-wrap: wrap;
+        max-width: 100%;
+      }
+      .stat {
+        flex: 1 1 calc(50% - 1px);
+        border-bottom: 1px solid #222;
+      }
+      .stat:nth-child(2) { border-right: none; }
+      .stat:last-child { border-bottom: none; }
+
+      .reveal-section {
+        padding: 20px 20px;
+      }
+      .reveal-box {
+        padding: 20px 20px;
+      }
+
+      .day-body {
+        padding: 36px 20px;
+      }
+      .day-body h2 {
+        font-size: 24px;
+      }
+
+      .day-nav {
+        padding: 16px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a class="brand" href="index.html">136X GOLD MINER</a>
+    <div class="days">
+      <a class="day-link active" href="day1.html">DAY 1</a>
+      <a class="day-link" href="day2.html">DAY 2</a>
+      <a class="day-link" href="day3.html">DAY 3</a>
+      <a class="day-link live" href="day4.html">DAY 4 <span class="live-badge">LIVE</span></a>
+    </div>
+  </nav>
+
+  <!-- DAY HERO -->
+  <section class="day-hero">
+    <div class="day-label">DAY 1 OF 4 &nbsp;·&nbsp; APRIL 15, 2026</div>
+    <h1>
+      THE <span class="gold">GREATEST</span><br/>
+      GOLD BULL MARKET<br/>
+      OF OUR LIFETIME IS<br/>
+      JUST GETTING STARTED
+    </h1>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="val">$4,777</div>
+        <div class="lbl">Gold Spot Price</div>
+      </div>
+      <div class="stat">
+        <div class="val">1,000+</div>
+        <div class="lbl">Metric Tons Bought</div>
+      </div>
+      <div class="stat">
+        <div class="val">136</div>
+        <div class="lbl">The Number That Changes Everything</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO SECTION -->
+  <div class="video-section">
+    <div class="video-wrapper">
+      <div id="yt-player"></div>
+    </div>
+  </div>
+
+  <!-- REVEAL BOX -->
+  <div class="reveal-section">
+    <div class="reveal-box" id="reveal-msg">
+      <h3>🔓 You've Unlocked Day 2</h3>
+      <p>Thanks for watching. <strong>Day 2</strong> is now available — discover the number that makes every traditional gold miner obsolete.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE BODY -->
+  <article class="day-body">
+    <span class="by-line">BY ROBERT KIYOSAKI · CHAPTER 1 OF 4</span>
+    <h2>WHY I BELIEVE GOLD IS HEADED TO PRICES MOST PEOPLE THINK ARE IMPOSSIBLE</h2>
+    <p>I've been called crazy for my gold predictions before. In 2002 I told people gold would hit $1,000 an ounce. It was trading at $300. People laughed.</p>
+    <p>In 2010 I said it would reach $2,000. The same people laughed. Then $3,000. Then $4,000. You know what they're not doing now? Laughing.</p>
+
+    <div class="section-head">THE SETUP</div>
+    <p>Gold went up 65% in 2025. That's not normal. That's a signal. Gold mining stocks did even better — nearly doubling over the same period.</p>
+    <p>But here's what almost nobody is talking about: the thing that's about to make traditional gold mining look completely and utterly obsolete.</p>
+
+    <div class="section-head">WHY NOW</div>
+    <p>Central banks purchased more gold in the last three years than at any point since the U.S. left the gold standard in 1971. China. India. Russia. Turkey. Dozens of smaller nations. All adding to reserves at record pace.</p>
+    <p>Meanwhile, the AI boom is creating a problem nobody planned for — a mountain of electronic waste laced with precious metals, and almost nobody knows how to efficiently recover them. Until now.</p>
+
+    <div class="section-head">WHAT I'M ABOUT TO SHARE WITH YOU</div>
+    <p>I started the Venture Network because I have more private deals cross my desk than I could possibly manage myself. This one is different. This one has a number attached to it that I've never seen before in 40 years of watching resource markets.</p>
+    <p>Tomorrow, I'm going to introduce you to that number. And when you understand what it means — you'll understand why I'm putting my name behind this with full conviction.</p>
+
+    <div class="pull-quote">
+      <div class="big-num">136</div>
+      <p class="pq-label">REMEMBER IT.</p>
+      <p class="pq-desc">Because when I explain what it means — you're going to understand why I'm putting my name behind this opportunity with full conviction.</p>
+    </div>
+
+    <p class="sign-off">See you tomorrow. — Robert Kiyosaki</p>
+  </article>
+
+  <!-- PREV / NEXT NAVIGATION -->
+  <nav class="day-nav">
+    <a href="index.html"><span>←</span> HOME</a>
+    <a href="day2.html">DAY 2 <span>→</span></a>
+  </nav>
+
+  <!-- YouTube IFrame Player API -->
+  <script>
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScript = document.getElementsByTagName('script')[0];
+    firstScript.parentNode.insertBefore(tag, firstScript);
+
+    var player;
+    var playSeconds = 0;
+    var revealShown = false;
+    var trackingInterval = null;
+
+    function onYouTubeIframeAPIReady() {
+      var isServed = (window.location.protocol === 'http:' || window.location.protocol === 'https:');
+      var playerVars = {
+        rel: 0,
+        modestbranding: 1,
+        enablejsapi: 1
+      };
+      // origin is required for the postMessage channel to work.
+      // file:// gives origin "null" which YouTube rejects — only set it when
+      // the page is served over http/https (i.e. via the local server).
+      if (isServed) {
+        playerVars.origin = window.location.origin;
+      }
+
+      player = new YT.Player('yt-player', {
+        videoId: 'dQw4w9WgXcQ',
+        playerVars: playerVars,
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady() {
+      // Player is ready — API channel confirmed open
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        // Start tracking playback time when video is playing
+        if (!trackingInterval) {
+          trackingInterval = setInterval(checkPlayTime, 500);
+        }
+      } else {
+        // Pause tracking when video is not playing
+        if (trackingInterval) {
+          clearInterval(trackingInterval);
+          trackingInterval = null;
+        }
+      }
+    }
+
+    var lastCheckedTime = null;
+
+    function checkPlayTime() {
+      if (!player || typeof player.getCurrentTime !== 'function') return;
+      if (revealShown) {
+        clearInterval(trackingInterval);
+        return;
+      }
+
+      var currentTime = player.getCurrentTime();
+
+      if (lastCheckedTime !== null) {
+        var delta = currentTime - lastCheckedTime;
+        // Only count forward progress (not seeks)
+        if (delta > 0 && delta < 2) {
+          playSeconds += delta;
+        }
+      }
+      lastCheckedTime = currentTime;
+
+      if (playSeconds >= 10) {
+        revealShown = true;
+        clearInterval(trackingInterval);
+        trackingInterval = null;
+        var box = document.getElementById('reveal-msg');
+        // Set display:block first, force a reflow so the browser commits the
+        // layout change, THEN add the animation class — otherwise the animation
+        // fires before the element is rendered and the fade never plays.
+        box.style.display = 'block';
+        void box.offsetWidth; // force reflow
+        box.classList.add('visible');
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  </script>
+
+</body>
+</html>
